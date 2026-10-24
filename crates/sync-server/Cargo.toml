@@ -3,10 +3,10 @@ name = "sync-server"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
-description = "Limusic Listen Together sync server (self-hosted WebSocket hub)"
+description = "Wrath Listen Together sync server (self-hosted WebSocket hub)"
 
 [[bin]]
-name = "limusic-sync"
+name = "wrath-sync"
 path = "src/main.rs"
 
 [dependencies]

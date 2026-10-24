@@ -1,6 +1,6 @@
 # Community-maintained development shell; it is not covered by CI.
 {
-  description = "Development environment for Limusic";
+  description = "Development environment for Wrath";
 
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 

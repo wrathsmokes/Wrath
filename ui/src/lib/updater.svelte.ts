@@ -11,7 +11,13 @@ import { canSelfUpdate, checkBetaUpdate, getSettings, openExternal, releaseNotes
 import { isNewer, isPrerelease } from './version';
 import { getVersion } from '@tauri-apps/api/app';
 
-const RELEASES_URL = 'https://github.com/SimoHypers/limusic/releases/latest';
+const RELEASES_URL = '';
+
+/** Auto-update is disabled in this fork: tauri.conf.json carries no endpoint and no signing key, so
+ *  no update can be offered or installed. Both the quiet launch check and the Settings button route
+ *  through `look()`, which returns early — nothing reaches the network. Re-enable by restoring the
+ *  plugin config with your own keys, then flipping this to false. */
+export const UPDATES_DISABLED = true;
 
 /** How often the quiet check repeats while the app stays open. */
 export const QUIET_INTERVAL_MS = 6 * 60 * 60 * 1000;
@@ -29,6 +35,7 @@ export const updateState = $state({
 let pending: Update | null = null;
 
 async function look(): Promise<boolean> {
+	if (UPDATES_DISABLED) return false;
 	let u: Update | null;
 	const beta = (await getSettings()).update_channel === 'beta';
 	const current = await getVersion();
@@ -148,6 +155,7 @@ export async function checkForUpdatesInteractive(): Promise<{ message: string; e
 /** Send a packaged build to the releases page. Their package manager does the actual updating; all
  *  the app can do is say a new version exists and get out of the way. */
 export function openDownloadPage() {
+	if (!RELEASES_URL) return;
 	openExternal(RELEASES_URL).catch((e) => toast.error(t('toasts.browser_failed', { error: String(e) })));
 }
 

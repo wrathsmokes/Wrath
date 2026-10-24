@@ -275,7 +275,7 @@ const UI_SETTINGS: [&str; 31] = [
     "locale",
 ];
 
-/// Resolve the music video for `video_id` and hand back a `limusicvideo://` URL the player view
+/// Resolve the music video for `video_id` and hand back a `wrathvideo://` URL the player view
 /// can put in a `<video src>`. `None` when YouTube has no usable video stream for it, which is the
 /// ordinary answer for a song and leaves the artwork in place. The real googlevideo URL never
 /// leaves Rust (context/11).
@@ -763,7 +763,7 @@ pub async fn open_mini(app: tauri::AppHandle) -> Result<(), String> {
 }
 
 /// Swap back. Same path as the tray, so the widget and the tray can't disagree about what
-/// "show Limusic" means.
+/// "show Wrath" means.
 #[tauri::command]
 pub async fn close_mini(app: tauri::AppHandle) -> Result<(), String> {
     crate::tray::show_main(&app);
@@ -1219,7 +1219,7 @@ pub async fn get_library_subscriptions(state: St<'_>) -> Result<Vec<BrowseItem>,
 }
 
 /// A playlist or album page. `id` is the browseId (`VL…` / `MPRE…`); Liked Songs is `VLLM`, and
-/// `LIMUSIC_ON_REPEAT` is the local auto-playlist rather than anything YouTube knows about.
+/// `WRATH_ON_REPEAT` is the local auto-playlist rather than anything YouTube knows about.
 ///
 /// `sort` asks YouTube for the tracks in a given order; `None` gets whatever order the account
 /// already has the list in, which is what a fresh visit wants (it matches YouTube Music).
@@ -2452,11 +2452,18 @@ pub struct ReleaseNote {
     body: String,
 }
 
+/// GitHub repository ("owner/name") whose releases feed the What's-new dialog. Empty until this fork
+/// is published: the feed then reports an empty changelog instead of querying a placeholder URL.
+const RELEASES_REPO: &str = "";
+
 /// What's new, read straight from the GitHub releases API so the release description is the only
 /// place the changelog is written. Cached for the process: the list only changes when a release
 /// is cut, and unauthenticated GitHub allows 60 requests an hour.
 #[tauri::command]
 pub async fn release_notes() -> Result<Vec<ReleaseNote>, String> {
+    if RELEASES_REPO.is_empty() {
+        return Ok(Vec::new());
+    }
     static CACHE: std::sync::OnceLock<Vec<ReleaseNote>> = std::sync::OnceLock::new();
     if let Some(cached) = CACHE.get() {
         return Ok(cached.clone());
@@ -2470,8 +2477,8 @@ pub async fn release_notes() -> Result<Vec<ReleaseNote>, String> {
         prerelease: bool,
     }
     let releases: Vec<GhRelease> = crate::http::client()
-        .get("https://api.github.com/repos/SimoHypers/limusic/releases?per_page=20")
-        .header("User-Agent", concat!("Limusic/", env!("CARGO_PKG_VERSION")))
+        .get(format!("https://api.github.com/repos/{RELEASES_REPO}/releases?per_page=20"))
+        .header("User-Agent", concat!("Wrath/", env!("CARGO_PKG_VERSION")))
         .header("Accept", "application/vnd.github+json")
         .timeout(std::time::Duration::from_secs(15))
         .send()
@@ -2502,7 +2509,7 @@ pub async fn release_notes() -> Result<Vec<ReleaseNote>, String> {
 /// Tauri's Linux updater knows one trick: rewrite an AppImage in place. It takes the path from
 /// `Env::appimage` and, when that is unset, falls back to `current_exe()` and writes the downloaded
 /// AppImage bytes over whatever it finds there. On the `.rpm` and on distro packages (the AUR's
-/// `limusic-bin`) that is a package-manager-owned `/usr/bin/limusic-app`: it fails on permissions
+/// `limusic-bin`) that is a package-manager-owned `/usr/bin/wrath-app`: it fails on permissions
 /// rather than doing damage, but offering the button at all is a lie. Those users update through
 /// their package manager, so the UI shows them a download link instead.
 ///
@@ -2523,11 +2530,9 @@ pub fn can_self_update(app: tauri::AppHandle) -> bool {
     }
 }
 
-/// The beta channel's manifest. `beta` is a permanent prerelease holding nothing but this file, and
-/// the release workflows move it to the newest release candidate, or to the newest release once that
-/// is ahead, so the URL never changes.
-const BETA_MANIFEST: &str =
-    "https://github.com/SimoHypers/limusic/releases/download/beta/latest.json";
+/// The beta channel's manifest. Disabled in this fork: auto-update is off, so there is no beta
+/// pointer to ask. `check_beta_update` returns early when this is empty.
+const BETA_MANIFEST: &str = "";
 
 /// What the updater plugin's own `check` command returns, so the UI can wrap it in the plugin's
 /// `Update` class and install it the usual way.
@@ -2553,6 +2558,9 @@ pub struct BetaUpdate {
 pub async fn check_beta_update(webview: tauri::Webview) -> Result<Option<BetaUpdate>, String> {
     use tauri::Manager;
     use tauri_plugin_updater::UpdaterExt;
+    if BETA_MANIFEST.is_empty() {
+        return Err("updates are disabled in this build".into());
+    }
     let url = tauri::Url::parse(BETA_MANIFEST).map_err(|e| e.to_string())?;
     let update = webview
         .updater_builder()
@@ -2589,7 +2597,7 @@ pub fn quit_app(app: tauri::AppHandle) {
 // --- Diagnostics ----------------------------------------------------------------------------
 
 /// The bug-report blob for Settings ▸ About: environment header plus the redacted tail of
-/// `limusic.log`. See `crate::diagnostics`.
+/// `wrath.log`. See `crate::diagnostics`.
 #[tauri::command]
 pub fn diagnostics(app: tauri::AppHandle, state: St<'_>) -> String {
     crate::diagnostics::report(&app, &state.db)
@@ -2816,7 +2824,7 @@ mod tests {
             video_id: "abc".into(),
             title: "Grace".into(),
             queued: true,
-            queued_by: Some("simohypers".into()),
+            queued_by: Some("wrath".into()),
             autoplay: true,
             set_video_id: Some("SVI".into()),
             ..Default::default()

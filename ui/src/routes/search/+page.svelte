@@ -231,7 +231,7 @@
 	// Tile covers. localStorage rather than SQLite, like `personal`: only the webview reads them.
 	// A category's first playlist changes over weeks, so a stale cover still shows while its
 	// replacement is fetched, and a fresh one is never asked for twice.
-	const ART_KEY = 'limusic:mood-art';
+	const ART_KEY = 'wrath:mood-art';
 	const ART_TTL_MS = 7 * 24 * 3600_000;
 	type ArtStore = Record<string, { url: string; at: number }>;
 	let art = $state<Record<string, string>>({});

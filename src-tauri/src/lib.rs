@@ -1,4 +1,4 @@
-//! Limusic Tauri app. Wires transport + player + db + orchestrator behind the command boundary.
+//! Wrath Tauri app. Wires transport + player + db + orchestrator behind the command boundary.
 
 mod appicon;
 mod audioproxy;
@@ -249,11 +249,11 @@ fn keep_on_screen(w: &tauri::WebviewWindow) {
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
-/// Logs to stdout **and** to `<app data>/limusic.log`, truncated each launch (the previous run is
-/// kept as `limusic.log.1`).
+/// Logs to stdout **and** to `<app data>/wrath.log`, truncated each launch (the previous run is
+/// kept as `wrath.log.1`).
 ///
 /// The filter names `app_lib`, the `[lib]` name, because that is what every tracing target in this
-/// crate carries (`app_lib::orchestrator`). It said `limusic_app` until 2026-08-29, which only ever
+/// crate carries (`app_lib::orchestrator`). It said `wrath_app` until 2026-08-29, which only ever
 /// matched `main.rs`, so every `debug!` in the app was dropped.
 ///
 /// The file is the only way a Windows or macOS user can produce a log at all: `main.rs` sets
@@ -269,8 +269,8 @@ fn init_logging(dir: &std::path::Path) {
         tracing_subscriber::EnvFilter::try_from_default_env()
             .unwrap_or_else(|_| "info,app_lib=debug".into())
     };
-    let path = dir.join("limusic.log");
-    let _ = std::fs::rename(&path, dir.join("limusic.log.1"));
+    let path = dir.join("wrath.log");
+    let _ = std::fs::rename(&path, dir.join("wrath.log.1"));
     // ponytail: one file per launch, no size cap. A run long enough to matter is a run whose log
     // someone wants anyway; add rotation if that stops being true.
     let file = std::fs::File::create(&path).ok().map(std::sync::Mutex::new);
@@ -369,7 +369,7 @@ fn x11_egl_vendor() -> Option<String> {
 /// `main.rs` sets `windows_subsystem = "windows"` in release, so a panic here writes to a stderr
 /// that is not connected to anything: the user sees a process start and disappear, with no window,
 /// no console and no log line. `init_logging` has already run by the time any caller gets here, so
-/// this reaches limusic.log (the writer is unbuffered, so the line lands before the exit).
+/// this reaches wrath.log (the writer is unbuffered, so the line lands before the exit).
 ///
 /// There is deliberately no dialog, although the dialog plugin is registered. `setup` runs on the
 /// main thread inside the event loop's `Ready` handler, and the plugin shows a message box by
@@ -390,9 +390,9 @@ fn fatal(what: &str, detail: &str) -> ! {
 /// which `run` sets once it has read this. Windows keeps it too: the updater starts the per-user
 /// NSIS installer with a plain ShellExecute, and the installer starts the new version the same way.
 static AUTOSTARTED: AtomicBool = AtomicBool::new(false);
-const RESTARTED_ENV: &str = "LIMUSIC_RESTARTED";
+const RESTARTED_ENV: &str = "WRATH_RESTARTED";
 
-/// What a cold launch was given, so `limusic-app 'https://music.youtube.com/watch?v=…'` opens the
+/// What a cold launch was given, so `wrath-app 'https://music.youtube.com/watch?v=…'` opens the
 /// link once the SPA has mounted (#348). Taken once by `take_launch_args`. A launch while we are
 /// already running reaches the single-instance callback instead, which emits `open-link`. Raw
 /// strings either way: `parseYtLink` in the UI decides what is a link, so there is one parser.
@@ -492,16 +492,16 @@ pub fn run() {
     // e.g. clicking the app icon while we're hidden in the tray — re-shows this instance
     // instead of spawning a second one (which would fight over SQLite and mpv).
     //
-    // `LIMUSIC_MULTI=1` lifts the guard, because the guard is exactly what makes Listen Together
+    // `WRATH_MULTI=1` lifts the guard, because the guard is exactly what makes Listen Together
     // impossible to test on one machine. Pair it with `XDG_DATA_HOME` (Linux) or `APPDATA`
     // (Windows) pointing somewhere else, or the second copy opens the first one's SQLite file and
     // the two fight over it, which is what the guard exists to prevent:
     //
-    //     LIMUSIC_MULTI=1 XDG_DATA_HOME=/tmp/limusic-b ./target/debug/limusic-app
-    if std::env::var_os("LIMUSIC_MULTI").is_none() {
+    //     WRATH_MULTI=1 XDG_DATA_HOME=/tmp/wrath-b ./target/debug/wrath-app
+    if std::env::var_os("WRATH_MULTI").is_none() {
         builder = builder.plugin(tauri_plugin_single_instance::init(|app, args, _cwd| {
             tray::show_main(app);
-            // `limusic-app <link>` against this instance (#348). argv[0] leads on every platform.
+            // `wrath-app <link>` against this instance (#348). argv[0] leads on every platform.
             if args.len() > 1 {
                 let _ = app.emit_to("main", "open-link", &args[1..]);
             }
@@ -573,10 +573,10 @@ pub fn run() {
 
             // Shared: the PoToken generator persists its session token through the same file,
             // and it is built before AppState takes ownership of everything else.
-            let (db, quarantined) = match Db::open_or_quarantine(&data_dir.join("limusic.sqlite")) {
+            let (db, quarantined) = match Db::open_or_quarantine(&data_dir.join("wrath.sqlite")) {
                 Ok(v) => v,
                 Err(e) => fatal(
-                    "Limusic could not open or create its database",
+                    "Wrath could not open or create its database",
                     &format!("{}: {e}", data_dir.display()),
                 ),
             };
@@ -593,9 +593,9 @@ pub fn run() {
             // Session bootstrap (context/15 startup ordering): load the persisted login session
             // (cookie/dataSyncId/visitorData) from settings; fetch visitorData anonymously
             // (context/04 §A) only if we've never stored one.
-            // `LIMUSIC_PROXY` overrides the stored setting, so a region-locked surface can be
+            // `WRATH_PROXY` overrides the stored setting, so a region-locked surface can be
             // tested for one run without a system-wide VPN (CLAUDE.md).
-            let proxy = std::env::var("LIMUSIC_PROXY")
+            let proxy = std::env::var("WRATH_PROXY")
                 .ok()
                 .filter(|p| !p.trim().is_empty())
                 .or_else(|| db.get_setting("proxy").filter(|p| !p.trim().is_empty()))
@@ -636,7 +636,7 @@ pub fn run() {
             let session = Session { locale: Locale::default(), visitor_data, data_sync_id, cookie };
             let it = match InnerTube::new(session, proxy.as_deref()) {
                 Ok(it) => it,
-                Err(e) => fatal("Limusic could not start its network client", &e.to_string()),
+                Err(e) => fatal("Wrath could not start its network client", &e.to_string()),
             };
             // Shelf titles, mood chips and playlist subtitles are YouTube's text, so the UI's
             // language has to go out with the request (#274). Persisted rather than pushed from the
@@ -656,7 +656,7 @@ pub fn run() {
             let mut player = match Player::new(&cache_dir.to_string_lossy()) {
                 Ok(p) => p,
                 Err(e) => fatal(
-                    "Limusic could not load libmpv, which it uses to play audio",
+                    "Wrath could not load libmpv, which it uses to play audio",
                     &format!(
                         "{e}. On Linux, install your distribution's mpv library \
                          (Fedora: mpv-libs, Debian/Ubuntu: libmpv2)."
@@ -679,7 +679,7 @@ pub fn run() {
             let events = match player.take_events() {
                 Some(ev) => ev,
                 None => fatal(
-                    "Limusic could not start its audio event loop",
+                    "Wrath could not start its audio event loop",
                     "the player's event channel was already taken, which is a bug",
                 ),
             };
@@ -1199,7 +1199,7 @@ pub fn run() {
 
 /// Let app commands answer only the UI's own windows. Tauri checks capabilities for plugin
 /// commands, but without an app ACL manifest an app command is open to any webview on a local
-/// origin, and the hidden cipher webview is one: its `limusicharness://` document runs YouTube's
+/// origin, and the hidden cipher webview is one: its `wrathharness://` document runs YouTube's
 /// player.js. It needs no IPC, the bridge drives it through eval callbacks (`webview.rs`). The
 /// login windows load remote pages, which Tauri refuses on its own.
 fn only_ui<R: tauri::Runtime>(

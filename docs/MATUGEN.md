@@ -1,34 +1,34 @@
 # Matugen integration
 
-Matugen support is **opt-in**. Limusic never reads or watches a Matugen file unless the
+Matugen support is **opt-in**. Wrath never reads or watches a Matugen file unless the
 **Matugen** switch under Settings ▸ Appearance is on.
 
 ## What it does
 
-While enabled, Limusic injects the generated CSS from your Matugen output file as a
+While enabled, Wrath injects the generated CSS from your Matugen output file as a
 stylesheet and adds the `matugen-theme` class to `<html>`. The generated palette then owns
 the application's color tokens, accent included: the accent picker and "Adapt colors to
 artwork" are switched off while it's on. When Matugen regenerates `matugen.css` after a
-wallpaper change, Limusic reloads it live.
+wallpaper change, Wrath reloads it live.
 
 ## Expected CSS path
 
-Limusic reads `limusic/matugen.css` from the system config directory:
+Wrath reads `wrath/matugen.css` from the system config directory:
 
-- Linux: `~/.config/limusic/matugen.css`
-- Windows: `%APPDATA%\limusic\matugen.css`
-- macOS: `~/Library/Application Support/limusic/matugen.css`
+- Linux: `~/.config/wrath/matugen.css`
+- Windows: `%APPDATA%\wrath\matugen.css`
+- macOS: `~/Library/Application Support/wrath/matugen.css`
 
 ## Configure Matugen
 
 1. Copy [`matugen-template.css`](matugen-template.css) into your Matugen templates directory
-   as `limusic.css`.
+   as `wrath.css`.
 2. Add a template entry to your Matugen config, for example:
 
 ```toml
-[templates.limusic]
-input_path = "~/.config/matugen/templates/limusic.css"
-output_path = "~/.config/limusic/matugen.css"
+[templates.wrath]
+input_path = "~/.config/matugen/templates/wrath.css"
+output_path = "~/.config/wrath/matugen.css"
 ```
 
 Adjust `input_path` to match your setup; `output_path` must be the path above for your system.
@@ -41,15 +41,15 @@ matugen image /path/to/wallpaper.png
 
 Or otherwise regenerate after changing wallpaper.
 
-## Enable in Limusic
+## Enable in Wrath
 
-Open Settings ▸ Appearance and turn **Matugen** on. Limusic starts its file watcher and loads
+Open Settings ▸ Appearance and turn **Matugen** on. Wrath starts its file watcher and loads
 the generated palette. With the switch off (the default), no watcher starts and the
-`limusic/matugen.css` file is not read or created.
+`wrath/matugen.css` file is not read or created.
 
 ## Disable
 
-Turn **Matugen** off. Limusic stops the watcher, removes the injected stylesheet and restores
+Turn **Matugen** off. Wrath stops the watcher, removes the injected stylesheet and restores
 the normal theme, including your own accent. Your template and generated CSS file are not
 deleted.
 

@@ -46,7 +46,7 @@ pub fn has_proxy() -> bool {
 /// only hands a host and port.
 ///
 /// The webviews load the artwork and the sign-in page themselves, so before this the setting never
-/// reached them and the images broke behind a proxy that only Limusic knew about (#465).
+/// reached them and the images broke behind a proxy that only Wrath knew about (#465).
 #[cfg_attr(target_os = "macos", allow(dead_code))]
 pub fn webview_proxy() -> Option<tauri::Url> {
     static URL: OnceLock<Option<tauri::Url>> = OnceLock::new();
@@ -95,7 +95,7 @@ pub fn client() -> &'static reqwest::Client {
             match reqwest::Proxy::all(p.as_str()) {
                 Ok(proxy) => b = b.proxy(proxy),
                 // Scheme only: the URI can carry credentials in its userinfo, and this lands in
-                // limusic.log, which is what users attach to bug reports.
+                // wrath.log, which is what users attach to bug reports.
                 Err(e) => {
                     let scheme = p.split_once("://").map_or("(none)", |(s, _)| s);
                     tracing::warn!(scheme, "unusable proxy setting, going direct: {e}")

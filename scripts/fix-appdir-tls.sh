@@ -86,11 +86,11 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 
 BUNDLE="${1:-target/release/bundle/appimage}"
-APPDIR="$(readlink -f "$BUNDLE/limusic.AppDir" 2>/dev/null || true)"
+APPDIR="$(readlink -f "$BUNDLE/Wrath.AppDir" 2>/dev/null || true)"
 [ -n "$APPDIR" ] && [ -d "$APPDIR" ] || {
-  echo "no AppDir at $BUNDLE/limusic.AppDir — run \`cargo tauri build --bundles appimage\` first"; exit 1; }
-APPIMAGE="$(ls "$BUNDLE"/limusic_*.AppImage 2>/dev/null | head -1 || true)"
-[ -n "$APPIMAGE" ] || { echo "no limusic_*.AppImage in $BUNDLE"; exit 1; }
+  echo "no AppDir at $BUNDLE/Wrath.AppDir — run \`cargo tauri build --bundles appimage\` first"; exit 1; }
+APPIMAGE="$(ls "$BUNDLE"/Wrath_*.AppImage 2>/dev/null | head -1 || true)"
+[ -n "$APPIMAGE" ] || { echo "no Wrath_*.AppImage in $BUNDLE"; exit 1; }
 APPIMAGE="$(readlink -f "$APPIMAGE")"
 
 # Libraries that must come from the HOST, never from us. Bundling one of these shadows the host's
@@ -301,7 +301,7 @@ echo "==> Overriding GIO_EXTRA_MODULES with the bundled module dirs…"
 # silently leave half the fix out.
 grep -q 'GIO_MODULE_DIR' "$HOOK" || cat >> "$HOOK" <<'EOF'
 
-# Limusic: the value written above is unusable — it contains a literal newline and an absolute path
+# Wrath: the value written above is unusable — it contains a literal newline and an absolute path
 # into the build machine's target/ dir. Bundled dirs only: host modules are built against the host's
 # GLib and fail to load into ours (gvfs wants g_variant_builder_init_static, GLib >= 2.84).
 export GIO_EXTRA_MODULES="$APPDIR/usr/lib/gio/modules:$APPDIR/usr/lib64/gio/modules"
@@ -334,7 +334,7 @@ echo "==> bundled gio modules: $MODS"
 #     fallback.
 grep -q 'gnutls-fallback' "$HOOK" || cat >> "$HOOK" <<'EOF'
 
-# Limusic: the gnutls stack is deliberately off the library path (defect 6). Ubuntu's gnutls
+# Wrath: the gnutls stack is deliberately off the library path (defect 6). Ubuntu's gnutls
 # hardcodes /etc/ssl/certs/ca-certificates.crt as its trust store, so on a host that keeps its CA
 # bundle anywhere else (openSUSE) ours leaves the webview trusting nothing. The host's own gnutls
 # knows where the host's trust store is.
@@ -372,7 +372,7 @@ EOF
 #     this block silently skip itself there.
 grep -q 'GST_PLUGIN_SYSTEM_PATH_1_0' "$HOOK" || cat >> "$HOOK" <<'EOF'
 
-# Limusic: WebKit decodes <video> through GStreamer, and the plugins travel with us (defect 5).
+# Wrath: WebKit decodes <video> through GStreamer, and the plugins travel with us (defect 5).
 # _1_0 is the versioned spelling GStreamer 1.x reads first, and SYSTEM_PATH replaces the compiled-in
 # /usr/lib/x86_64-linux-gnu/gstreamer-1.0 rather than adding to it, so a Debian host's own plugins
 # are never loaded into the older GStreamer we ship.
@@ -381,7 +381,7 @@ export GST_PLUGIN_SCANNER_1_0="$APPDIR/usr/bin/gst-plugin-scanner"
 # The default registry is $XDG_CACHE_HOME/gstreamer-1.0/registry.<arch>.bin, shared with every other
 # GStreamer app on the machine. Ours describes a different plugin set to a different GStreamer, so
 # give it its own file rather than have the two rewrite each other's on every launch.
-export GST_REGISTRY_1_0="${XDG_CACHE_HOME:-${HOME:-/tmp}/.cache}/limusic/gstreamer-registry.bin"
+export GST_REGISTRY_1_0="${XDG_CACHE_HOME:-${HOME:-/tmp}/.cache}/wrath/gstreamer-registry.bin"
 mkdir -p "$(dirname "$GST_REGISTRY_1_0")" 2>/dev/null || true
 EOF
 

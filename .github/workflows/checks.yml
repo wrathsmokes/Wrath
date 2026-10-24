@@ -8,7 +8,7 @@ name: Checks
 # had no way to know. `rustfmt.toml` is committed now and the tree was normalised to it, which means
 # the drift is detectable mechanically instead of during review.
 #
-# WHY NOT ALSO BUILD AND TEST HERE: `limusic-app` links libmpv and webkit2gtk, so testing it needs
+# WHY NOT ALSO BUILD AND TEST HERE: `wrath-app` links libmpv and webkit2gtk, so testing it needs
 # the full Tauri system-dependency install and a cold Rust compile. This job needs neither: rustfmt
 # parses the source and never builds it, so it finishes in seconds on a bare runner and stays cheap
 # enough to run on every push. The tests live in the `test` job below for exactly that reason.
@@ -90,12 +90,12 @@ jobs:
         working-directory: ui
         run: pnpm test
 
-  # The Rust half. `limusic-app` links libmpv and webkit2gtk, so this job pays for an apt install
+  # The Rust half. `wrath-app` links libmpv and webkit2gtk, so this job pays for an apt install
   # and a cold compile that the rustfmt job deliberately avoids. That is why it is a separate job:
   # rustfmt still answers in seconds while this one runs.
   #
   # `cargo test --all` and not a pure-Rust subset: `crates/player` depends on libmpv2, so it
-  # needs the same system libraries `limusic-app` does. The subset that builds bare is
+  # needs the same system libraries `wrath-app` does. The subset that builds bare is
   # `-p innertube -p listen-protocol`, which is not worth a second job.
   #
   # This is also the only place `macos_window_config_mirrors_the_base_window` runs. Nobody here

@@ -40,7 +40,7 @@ commas). Match the style of the file you are in.
 
 ```bash
 cargo test --all                                        # everything, no network
-cargo test -p limusic-app --lib -- --ignored --nocapture   # hits live lyrics APIs
+cargo test -p wrath-app --lib -- --ignored --nocapture   # hits live lyrics APIs
 cd ui && pnpm check                                     # svelte-check + types
 ```
 
@@ -99,11 +99,10 @@ setup.
 Translations live in `ui/src/lib/locales/` as nested JSON, one file per language,
 with `en.json` as the source of truth.
 
-**Use [Weblate](https://hosted.weblate.org/projects/limusic/) rather than editing
-the JSON by hand.** It shows you the English original beside each string, flags
-translations that went stale when the English changed, and opens the pull request
-for you. Hand-edited JSON tends to drift out of sync with `en.json` within a
-release or two.
+**Edit the JSON by hand in this fork.** Upstream uses a hosted Weblate project,
+which this fork does not have; pointing contributors there would send them to
+translate the original project's strings. Keep `en.json` as the source of truth
+and mirror the change into the other catalogs.
 
 Two things to know:
 
@@ -113,7 +112,7 @@ Two things to know:
 - A missing key is not a bug. Anything a catalog does not have falls back to
   English at runtime, so a partial translation is safe to ship.
 
-Adding a new language: Weblate creates the JSON file, then import it in
+Adding a new language: create the JSON file, then import it in
 `ui/src/lib/locales/index.ts` and add the locale to `LocaleId`, `LOCALES` and
 `translations` there so the picker offers it.
 

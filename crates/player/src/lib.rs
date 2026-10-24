@@ -229,8 +229,8 @@ fn new_mpv(cache_dir: &str) -> Result<Mpv, Error> {
     // What the system mixer calls the stream. mpv's own names are "mpv" and `<media title> - mpv`,
     // and the media title of a proxied stream is the last segment of its loopback URL, so KDE's
     // mixer listed "e09087d13ce71f6d - mpv" (issue #409).
-    mpv.set_property("audio-client-name", "Limusic")?;
-    mpv.set_property("title", "Limusic")?;
+    mpv.set_property("audio-client-name", "Wrath")?;
+    mpv.set_property("title", "Wrath")?;
     mpv.set_property("gapless-audio", "yes")?;
     // mpv's native Matroska demuxer floors WebM DiscardPadding nanoseconds to Opus samples. For
     // values one nanosecond below a sample boundary (YouTube emits 6,833,333 ns), that leaves one
@@ -583,7 +583,7 @@ impl Player {
         self.cancel_fade();
         // `demuxer-cache-time` is the *end* of the cached range, so this only catches a forward
         // seek past it. A backward seek can need the network too (mpv prunes behind the reader);
-        // the mpv log is what says which, when `LIMUSIC_MPV_LOG` is on.
+        // the mpv log is what says which, when `WRATH_MPV_LOG` is on.
         let cached_to = self.mpv().get_property::<f64>("demuxer-cache-time").ok();
         let past_cache_end = cached_to.map_or(true, |c| position_secs > c);
         tracing::info!(to = position_secs, cached_to, past_cache_end, "seek");
@@ -623,7 +623,7 @@ impl Player {
     /// tls.c), so an https proxy is dropped without a word.
     ///
     /// Only the scheme is logged: a proxy URI can carry credentials in its userinfo and the warning
-    /// lands in `limusic.log`, which is what users attach to bug reports.
+    /// lands in `wrath.log`, which is what users attach to bug reports.
     pub fn set_http_proxy(&self, proxy: Option<&str>) -> Result<(), Error> {
         let p = proxy.unwrap_or("").trim();
         let usable = p.is_empty() || p.starts_with("http://");
@@ -747,7 +747,7 @@ fn pitch_filter() -> &'static str {
 
 /// The env var that turns mpv's own log on, and the level it is given. mpv's names, so: `no`,
 /// `fatal`, `error`, `warn`, `info`, `v`, `debug`, `trace`.
-const MPV_LOG_ENV: &str = "LIMUSIC_MPV_LOG";
+const MPV_LOG_ENV: &str = "WRATH_MPV_LOG";
 
 /// Ask mpv for its own log messages, which arrive as [`Event::LogMessage`] and are forwarded into
 /// `tracing` by [`event_loop`].
@@ -842,7 +842,7 @@ fn event_loop(mut ev: EventContext, deck: usize, decks: Arc<Decks>) {
                         let text = text.trim_end();
                         // Everything below `warn` lands at `info`, not `debug`: the app's default
                         // filter is `info`, so a `debug!` here would be silently dropped and
-                        // setting `LIMUSIC_MPV_LOG` would appear to do nothing. mpv only sends
+                        // setting `WRATH_MPV_LOG` would appear to do nothing. mpv only sends
                         // these levels when that variable asked for them, so they are never noise.
                         match level {
                             "fatal" | "error" => {
@@ -1220,7 +1220,7 @@ mod tests {
         use super::{Error, Player, NO_RUBBERBAND};
         use std::sync::atomic::Ordering;
 
-        let dir = std::env::temp_dir().join("limusic-af-test");
+        let dir = std::env::temp_dir().join("wrath-af-test");
         std::fs::create_dir_all(&dir).unwrap();
         let p = Player::new(dir.to_str().unwrap()).expect("libmpv");
         let af = || p.mpv().get_property::<String>("af").unwrap();
@@ -1351,7 +1351,7 @@ mod tests {
         use std::collections::HashMap;
         use std::time::{Duration, Instant};
 
-        let dir = std::env::temp_dir().join("limusic-load-test");
+        let dir = std::env::temp_dir().join("wrath-load-test");
         std::fs::create_dir_all(&dir).unwrap();
         let p = Player::new(dir.to_str().unwrap()).expect("libmpv");
         p.mpv().set_property("ao", "null").unwrap(); // no audio device needed
@@ -1502,7 +1502,7 @@ mod tests {
         use super::{Player, PlayerEvent};
         use std::time::{Duration, Instant};
 
-        let dir = std::env::temp_dir().join("limusic-pause-test");
+        let dir = std::env::temp_dir().join("wrath-pause-test");
         std::fs::create_dir_all(&dir).unwrap();
         let mut p = Player::new(dir.to_str().unwrap()).expect("libmpv");
         p.mpv().set_property("ao", "null").unwrap();
@@ -1545,7 +1545,7 @@ mod tests {
         use super::Player;
         use std::time::{Duration, Instant};
 
-        let dir = std::env::temp_dir().join("limusic-start-test");
+        let dir = std::env::temp_dir().join("wrath-start-test");
         std::fs::create_dir_all(&dir).unwrap();
         let p = Player::new(dir.to_str().unwrap()).expect("libmpv");
         p.mpv().set_property("ao", "null").unwrap();

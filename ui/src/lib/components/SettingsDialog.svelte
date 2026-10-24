@@ -11,7 +11,6 @@
 		KeyboardIcon,
 		Cancel01Icon as RemoveIcon,
 		Copy01Icon,
-		Coffee02Icon,
 		DiscordIcon,
 		LastFmIcon,
 		Globe02Icon,
@@ -42,7 +41,8 @@
 		checkForUpdatesInteractive,
 		installUpdate,
 		openDownloadPage,
-		recheckForUpdates
+		recheckForUpdates,
+		UPDATES_DISABLED
 	} from '$lib/updater.svelte';
 	import { getVersion } from '@tauri-apps/api/app';
 	import { t, setLocale, currentLocale, LOCALES } from '$lib/i18n.svelte';
@@ -167,7 +167,7 @@
 		diagError = '';
 		try {
 			const path = await save({
-				defaultPath: `limusic-diagnostics-${new Date().toISOString().slice(0, 10)}.txt`,
+				defaultPath: `wrath-diagnostics-${new Date().toISOString().slice(0, 10)}.txt`,
 				filters: [{ name: 'Text', extensions: ['txt'] }]
 			});
 			if (!path) return;
@@ -176,23 +176,6 @@
 			flash('saved');
 		} catch (e) {
 			diagState = 'idle';
-			diagError = String(e);
-		}
-	}
-
-	async function openBugForm() {
-		diagError = '';
-		try {
-			// GitHub's prefill only reaches `input` and `textarea` fields, so the "Which system?"
-			// dropdown stays the user's one click and everything the app knows goes in `system`.
-			const system = await api.diagnosticsSummary();
-			const q = new URLSearchParams({
-				template: 'bug_report.yml',
-				version,
-				system
-			});
-			await api.openExternal(`https://github.com/SimoHypers/limusic/issues/new?${q}`);
-		} catch (e) {
 			diagError = String(e);
 		}
 	}
@@ -742,7 +725,7 @@
 							class="mb-7 rounded-xl border bg-gradient-to-br from-primary/8 to-transparent px-4 py-4"
 						>
 							<div class="flex items-center gap-2">
-								<span class="font-heading text-lg font-bold">Limusic</span>
+								<span class="font-heading text-lg font-bold">Wrath</span>
 								{#if version}
 									<span
 										class="rounded-full bg-primary/12 px-2 py-0.5 text-[11px] font-semibold text-primary"
@@ -756,18 +739,13 @@
 							</p>
 						</div>
 
-						<section class={GROUP}>
-							<h3 class={LABEL}>{t('settings.sections.support')}</h3>
-							<div class={CARD}>
-								{@render row({
-									title: t('settings.about.kofi'),
-									desc: t('settings.about.kofi_hint'),
-									control: kofiButton,
-									tall: true
-								})}
-							</div>
-						</section>
+						<!-- Upstream's Support/Ko-fi section is not carried over: it links the original
+						     maintainer's donation page, which this fork has no claim to. -->
 
+						<!-- Updates are disabled in this fork (no endpoint, no signing key), and the check
+						     button would always report "up to date" — so the whole section is hidden
+						     rather than shown inert. Restore together with `plugins.updater`. -->
+						{#if !UPDATES_DISABLED}
 						<section class={GROUP}>
 							<h3 class={LABEL}>{t('settings.sections.updates')}</h3>
 							<div class={CARD}>
@@ -797,6 +775,7 @@
 								{/if}
 							</div>
 						</section>
+						{/if}
 
 						<section class={GROUP}>
 							<h3 class={LABEL}>{t('settings.sections.report')}</h3>
@@ -812,11 +791,6 @@
 									title: t('settings.about.diagnostics_save'),
 									desc: t('settings.about.diagnostics_save_hint'),
 									control: saveDiagButton
-								})}
-								{@render row({
-									title: t('settings.about.report_issue'),
-									desc: t('settings.about.report_issue_hint'),
-									control: reportButton
 								})}
 							</div>
 						</section>
@@ -981,7 +955,7 @@
 
 {#snippet clientList()}
 	<p class="mb-3 max-w-prose text-xs leading-relaxed text-muted-foreground">
-		{t('settings.general.stream_clients_hint', { var: 'LIMUSIC_DISABLED_CLIENTS' })}
+		{t('settings.general.stream_clients_hint', { var: 'WRATH_DISABLED_CLIENTS' })}
 	</p>
 	<div class="flex flex-col gap-2">
 		{#each clients as name (name)}
@@ -1064,17 +1038,6 @@
 {#snippet saveDiagButton()}
 	<Button variant="secondary" size="sm" onclick={saveDiagnostics} disabled={diagState === 'busy'}>
 		{diagState === 'saved' ? t('settings.about.diagnostics_saved') : t('common.save')}
-	</Button>
-{/snippet}
-
-{#snippet reportButton()}
-	<Button size="sm" onclick={openBugForm}>{t('settings.about.report_issue_button')}</Button>
-{/snippet}
-
-{#snippet kofiButton()}
-	<Button variant="secondary" size="sm" onclick={() => api.openExternal('https://ko-fi.com/simohypers')}>
-		<HugeiconsIcon icon={Coffee02Icon} size={15} strokeWidth={1.8} />
-		{t('settings.about.kofi_button')}
 	</Button>
 {/snippet}
 

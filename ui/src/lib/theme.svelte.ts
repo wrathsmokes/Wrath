@@ -86,7 +86,7 @@ const APPEARANCE_KEY = 'appearance';
 const PALETTE_CLASSES = THEMES.map((t) => `theme-${t.id}`);
 /** Set on <html> while the artwork tint is live; the fill rules in layout.css hang off it. */
 const TINT_CLASS = 'art-tint';
-const MATUGEN_STYLE_ID = 'limusic-matugen';
+const MATUGEN_STYLE_ID = 'wrath-matugen';
 const ACCENT_VARS = ['--primary', '--primary-foreground', '--accent', '--accent-foreground'];
 const CUSTOM_VARS = ['--hue', '--radius', '--font-sans', '--font-heading'];
 // Same two neutrals the preset accent themes pick between.
