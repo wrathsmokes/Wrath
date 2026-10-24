@@ -2,9 +2,9 @@
 //! setting. Off by default: Linux desktops already show the MPRIS widget, and a notification per
 //! song is a preference, not something everyone wants.
 //!
-//! Only while no Wrath window has focus, unless the song started on its own and the user opted
+//! Only while no Radiohead window has focus, unless the song started on its own and the user opted
 //! into `track_notifications_focused`: a song they just picked in the app needs no toast, but one
-//! that rolls over while Wrath sits in front may go unseen. Best-effort like `media.rs`: a
+//! that rolls over while Radiohead sits in front may go unseen. Best-effort like `media.rs`: a
 //! missing notification daemon is a `debug!` line.
 
 #[cfg(all(unix, not(target_os = "macos")))]
@@ -19,11 +19,11 @@ static PREV: Mutex<Option<notify_rust::NotificationHandle>> = Mutex::new(None);
 
 pub fn track_changed(app: &AppHandle, title: &str, artists: &str, even_focused: bool) {
     if !even_focused && app.webview_windows().values().any(|w| w.is_focused().unwrap_or(false)) {
-        tracing::debug!("notification skipped: a Wrath window has focus");
+        tracing::debug!("notification skipped: a Radiohead window has focus");
         return;
     }
     let mut n = notify_rust::Notification::new();
-    n.summary(title).body(artists).appname("Wrath");
+    n.summary(title).body(artists).appname("Radiohead");
     #[cfg(all(unix, not(target_os = "macos")))]
     {
         // The binary name is the icon name the .deb/.rpm install. An AppImage has no themed icon,

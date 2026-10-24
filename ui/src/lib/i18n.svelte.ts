@@ -18,7 +18,7 @@ type NestedKeyOf<ObjectType extends object> = {
 
 export type TranslationKey = NestedKeyOf<Translations>;
 
-const LOCALE_STORAGE_KEY = 'wrath_locale';
+const LOCALE_STORAGE_KEY = 'radiohead_locale';
 
 /**
  * The saved language, else the system one if we have a catalog for it, else English.

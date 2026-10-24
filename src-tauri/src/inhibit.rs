@@ -17,8 +17,8 @@ use zbus::blocking::Connection;
 use zbus::zvariant::DynamicType;
 use zbus::Message;
 
-/// The installed `wrath.desktop`, which is how the desktop finds a name and icon to show.
-const APP_ID: &str = "wrath";
+/// The installed `radiohead.desktop`, which is how the desktop finds a name and icon to show.
+const APP_ID: &str = "radiohead";
 const REASON: &str = "Playing music";
 
 /// On both, the interface is named like the bus name.

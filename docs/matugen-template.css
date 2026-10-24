@@ -1,11 +1,11 @@
-/* Wrath Matugen palette template.
+/* Radiohead Matugen palette template.
  *
- * Copy this file into your Matugen templates directory as wrath.css, point your
- * Matugen config at it and write the output to Wrath's CSS path
+ * Copy this file into your Matugen templates directory as radiohead.css, point your
+ * Matugen config at it and write the output to Radiohead's CSS path
  * (see docs/MATUGEN.md). Matugen expands the placeholders below.
  *
  * Light values are emitted under html.matugen-theme; dark values under
- * html.matugen-theme.dark, matching Wrath's root selector cascade.
+ * html.matugen-theme.dark, matching Radiohead's root selector cascade.
  */
 
 html.matugen-theme {

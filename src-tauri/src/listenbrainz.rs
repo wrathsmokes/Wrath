@@ -22,7 +22,7 @@ use crate::state::AppState;
 
 const API_ROOT: &str = "https://api.listenbrainz.org";
 const USER_AGENT: &str =
-    concat!("Wrath/", env!("CARGO_PKG_VERSION"));
+    concat!("Radiohead/", env!("CARGO_PKG_VERSION"));
 
 /// The `track_metadata` object for one listen. `video_id` feeds `origin_url` for YouTube tracks
 /// (and picks the music service); local files carry no URL.
@@ -35,8 +35,8 @@ pub(crate) fn track_metadata(r: &Resolved, video_id: &str, duration: f64) -> ser
         meta["release_name"] = serde_json::Value::String(r.album.clone());
     }
     let mut info = serde_json::Map::new();
-    info.insert("media_player".into(), serde_json::Value::String("Wrath".into()));
-    info.insert("submission_client".into(), serde_json::Value::String("Wrath".into()));
+    info.insert("media_player".into(), serde_json::Value::String("Radiohead".into()));
+    info.insert("submission_client".into(), serde_json::Value::String("Radiohead".into()));
     info.insert(
         "submission_client_version".into(),
         serde_json::Value::String(env!("CARGO_PKG_VERSION").into()),
@@ -230,7 +230,7 @@ mod tests {
         assert_eq!(m["track_name"], "Fire");
         assert_eq!(m["release_name"], "Album");
         assert_eq!(m["additional_info"]["duration_ms"], 180_000);
-        assert_eq!(m["additional_info"]["submission_client"], "Wrath");
+        assert_eq!(m["additional_info"]["submission_client"], "Radiohead");
         assert_eq!(
             m["additional_info"]["origin_url"],
             "https://music.youtube.com/watch?v=dQw4w9WgXcQ"

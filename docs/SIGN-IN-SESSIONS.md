@@ -1,15 +1,15 @@
 # Sign-in sessions: where the data lives
 
-Everything below is per-OS under Tauri's app-data dir for identifier `com.wrath.desktop`
+Everything below is per-OS under Tauri's app-data dir for identifier `com.radiohead.desktop`
 (`tauri.conf.json`), created in `lib.rs` via `app.path().app_data_dir()`:
 
 | OS | Directory |
 |---|---|
-| Windows | `%APPDATA%\com.wrath.desktop\` |
-| Linux | `~/.local/share/com.wrath.desktop/` |
-| macOS | `~/Library/Application Support/com.wrath.desktop/` |
+| Windows | `%APPDATA%\com.radiohead.desktop\` |
+| Linux | `~/.local/share/com.radiohead.desktop/` |
+| macOS | `~/Library/Application Support/com.radiohead.desktop/` |
 
-## 1. SQLite: `wrath.sqlite`
+## 1. SQLite: `radiohead.sqlite`
 
 The canonical store of your saved Google accounts and the active session. Schema: `src-tauri/src/db.rs`.
 
@@ -48,12 +48,12 @@ Databases from before multi-account are migrated once on open (`Db::open`): the 
 The sign-in webview (`src-tauri/src/session.rs`) is persistent (non-incognito) on purpose. Its
 cookies live in the OS webview profile data *next to* the app data dir, not in the SQLite file:
 
-- **Windows (WebView2):** user-data folder under `%LOCALAPPDATA%\com.wrath.desktop\EBWebView\`
-- **Linux (WebKitGTK):** `~/.local/share/com.wrath.desktop/` webkit data (or XDG cache)
-- **macOS (WKWebView):** inside `~/Library/Application Support/com.wrath.desktop/` WebKit data
+- **Windows (WebView2):** user-data folder under `%LOCALAPPDATA%\com.radiohead.desktop\EBWebView\`
+- **Linux (WebKitGTK):** `~/.local/share/com.radiohead.desktop/` webkit data (or XDG cache)
+- **macOS (WKWebView):** inside `~/Library/Application Support/com.radiohead.desktop/` WebKit data
 
-This is why a re-login is one click with no password/paste, and why deleting `wrath.sqlite`
-alone does not sign the webview out of Google. Wrath never reads this store as state:
+This is why a re-login is one click with no password/paste, and why deleting `radiohead.sqlite`
+alone does not sign the webview out of Google. Radiohead never reads this store as state:
 `session.rs` copies the youtube-domain cookies out of it into a `Cookie` header and stores that
 copy in SQLite.
 

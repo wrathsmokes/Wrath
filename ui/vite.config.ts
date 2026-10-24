@@ -10,7 +10,7 @@ export default defineConfig({
 	},
 	plugins: [
 		{
-			name: 'wrath-dev-referrer-policy',
+			name: 'radiohead-dev-referrer-policy',
 			configureServer(server) {
 				server.middlewares.use((_req, res, next) => {
 					res.setHeader('Referrer-Policy', 'no-referrer');

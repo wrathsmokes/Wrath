@@ -40,11 +40,11 @@ use crate::state::AppState;
 /// (via build.rs) — never from source, the repo is public. Registered at
 /// <https://www.last.fm/api/account/create>. Without them the titlebar button errors out with a
 /// clear message instead of silently doing nothing.
-const API_KEY: &str = match option_env!("WRATH_LASTFM_API_KEY") {
+const API_KEY: &str = match option_env!("RADIOHEAD_LASTFM_API_KEY") {
     Some(v) => v,
     None => "",
 };
-const API_SECRET: &str = match option_env!("WRATH_LASTFM_API_SECRET") {
+const API_SECRET: &str = match option_env!("RADIOHEAD_LASTFM_API_SECRET") {
     Some(v) => v,
     None => "",
 };
@@ -65,7 +65,7 @@ const ERR_TEMP_UNAVAILABLE: i64 = 16;
 /// How scrobbling behaves, from the Scrobbling settings tab (#327, #404). One JSON blob in the
 /// `lastfm_config` setting, the same pattern as `discord_rpc_config`: a new knob is a field here,
 /// a field in `ui/src/lib/scrobble.ts`, and a control in the tab. Missing or unparseable fields
-/// fall back to [`Default`], which is exactly how Wrath scrobbled before the tab existed.
+/// fall back to [`Default`], which is exactly how Radiohead scrobbled before the tab existed.
 #[derive(Clone, serde::Deserialize)]
 #[serde(default)]
 pub struct ScrobbleConfig {

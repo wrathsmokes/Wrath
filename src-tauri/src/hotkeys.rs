@@ -1,8 +1,8 @@
-//! System-wide global hotkeys management for Wrath.
+//! System-wide global hotkeys management for Radiohead.
 //!
 //! Uses `tauri-plugin-global-shortcut` to listen for keyboard events at the OS level
 //! (e.g. Windows `RegisterHotKey`), allowing users to control playback even when
-//! Wrath is minimized to the system tray or running in the background.
+//! Radiohead is minimized to the system tray or running in the background.
 
 use std::collections::HashMap;
 use std::sync::atomic::{AtomicI64, Ordering};

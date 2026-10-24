@@ -40,7 +40,7 @@ commas). Match the style of the file you are in.
 
 ```bash
 cargo test --all                                        # everything, no network
-cargo test -p wrath-app --lib -- --ignored --nocapture   # hits live lyrics APIs
+cargo test -p radiohead-app --lib -- --ignored --nocapture   # hits live lyrics APIs
 cd ui && pnpm check                                     # svelte-check + types
 ```
 

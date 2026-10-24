@@ -1,6 +1,6 @@
 // Retrying what failed while the network was down, once it is back (#483). A load that hit a dead
 // connection used to sit on "No connection" until the user pressed Try again, which is what every
-// launch at login looked like when Wrath beat the network up.
+// launch at login looked like when Radiohead beat the network up.
 //
 // Three triggers, because none is enough alone:
 // - `online`: the webview's own signal, but at boot the adapter can be up before DNS answers, so

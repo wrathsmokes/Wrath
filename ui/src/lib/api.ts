@@ -186,7 +186,7 @@ export interface HomePage {
  * like any other playlist; the only thing the UI does differently is draw an icon cover, because
  * a playlist built from local play counts has no artwork of its own.
  */
-export const ON_REPEAT_ID = 'WRATH_ON_REPEAT';
+export const ON_REPEAT_ID = 'RADIOHEAD_ON_REPEAT';
 
 /**
  * Liked Music's browseId. YouTube edits this one through the rating endpoint, not `edit_playlist`,
@@ -415,7 +415,7 @@ export const setVolume = (volume: number) => invoke<void>('set_volume', { volume
 export const setPlaybackParams = (speed: number, semitones: number) =>
 	invoke<void>('set_playback_params', { speed, semitones });
 export const getQueue = () => invoke<QueueState>('get_queue');
-/** A `wrathvideo://` URL for the track's music video, or null when there isn't one. `maxHeight`
+/** A `radioheadvideo://` URL for the track's music video, or null when there isn't one. `maxHeight`
  *  caps the picture at what the box on screen can actually show. The bytes are proxied through
  *  Rust; the webview never sees a googlevideo URL. */
 export const videoStream = (videoId: string, maxHeight: number) =>
@@ -510,7 +510,7 @@ export const openExternal = (url: string) => invoke<void>('open_external', { url
 /** Real quit (not close-to-tray). Same path as the tray's Quit item. */
 export const quitApp = () => invoke<void>('quit_app');
 
-/** Environment + the redacted tail of `wrath.log`, for pasting into a bug report. */
+/** Environment + the redacted tail of `radiohead.log`, for pasting into a bug report. */
 export const diagnostics = () => invoke<string>('diagnostics');
 /** Just the environment block, for prefilling the GitHub bug form. */
 export const diagnosticsSummary = () => invoke<string>('diagnostics_summary');
@@ -1071,7 +1071,7 @@ export const onQueueAppended = (cb: (q: QueueAppended) => void): Promise<Unliste
 /** Main window shown/hidden (close-to-tray, the mini player). WebKitGTK never tells the page. */
 export const onUiVisible = (cb: (v: boolean) => void): Promise<UnlistenFn> =>
 	listen<boolean>('ui-visible', (e) => cb(e.payload));
-/** `wrath-app <link>` (#348): the arguments a cold launch was given, handed over once... */
+/** `radiohead-app <link>` (#348): the arguments a cold launch was given, handed over once... */
 export const takeLaunchArgs = () => invoke<string[]>('take_launch_args');
 /** ...and those of a second launch while this one runs. */
 export const onOpenLink = (cb: (args: string[]) => void): Promise<UnlistenFn> =>

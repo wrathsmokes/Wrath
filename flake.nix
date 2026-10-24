@@ -1,6 +1,6 @@
 # Community-maintained development shell; it is not covered by CI.
 {
-  description = "Development environment for Wrath";
+  description = "Development environment for Radiohead";
 
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 

@@ -1244,7 +1244,7 @@ async fn set_cover(state: &Arc<AppState>, playlist_id: &str, url: &str) {
     } else {
         return;
     };
-    let tmp = std::env::temp_dir().join(format!("wrath-cover-{}.{ext}", rand::random::<u32>()));
+    let tmp = std::env::temp_dir().join(format!("radiohead-cover-{}.{ext}", rand::random::<u32>()));
     if std::fs::write(&tmp, &bytes).is_ok() {
         if let Err(e) = crate::commands::store_cover(&state.app, state, playlist_id, &tmp) {
             tracing::warn!(error = %e, "import: cover not set");

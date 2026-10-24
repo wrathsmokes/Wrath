@@ -1,26 +1,26 @@
-# Wrath
+# Radiohead
 
 **A native desktop YouTube Music client. Rust + Tauri, ad-free, no Electron.**
 
-Wrath is a **fork of [Limusic](https://github.com/SimoHypers/limusic)** by
+Radiohead is a **fork of [Limusic](https://github.com/SimoHypers/limusic)** by
 [SimoHypers](https://github.com/SimoHypers), rebranded and maintained separately.
 It is not affiliated with upstream, with YouTube, or with Google.
 
-> **Status:** source-only. There are no Wrath releases yet — build from source.
+> **Status:** source-only. There are no Radiohead releases yet — build from source.
 > Upstream's releases are *Limusic* and are not this project.
 
 ---
 
 ## About this fork
 
-Changes in Wrath relative to upstream `limusic` v1.3.0:
+Changes in Radiohead relative to upstream `limusic` v1.3.0:
 
-- Renamed product, binary, bundle identifier (`com.wrath.desktop`), window titles,
+- Renamed product, binary, bundle identifier (`com.radiohead.desktop`), window titles,
   log/database/config filenames, MPRIS name, notification name, URI schemes,
   environment variables and package/crate names.
 - **Auto-update removed.** `tauri.conf.json` carries no endpoints and no signing
   public key, `createUpdaterArtifacts` is off, and the UI's update check returns
-  early. A Wrath build cannot be silently updated by upstream's releases. To
+  early. A Radiohead build cannot be silently updated by upstream's releases. To
   re-enable, generate your own Tauri keypair and restore the `plugins.updater`
   block with your own endpoint and key.
 - **Discord Rich Presence disabled** until you register your own Discord
@@ -93,20 +93,20 @@ Output lands in `target/release/bundle/`.
 
 ## License and attribution
 
-Wrath is distributed under **GPL-3.0**, the same license as upstream. See
+Radiohead is distributed under **GPL-3.0**, the same license as upstream. See
 [LICENSE](LICENSE) and [NOTICE.md](NOTICE.md).
 
 ```
-Wrath — a rebranded fork of Limusic
+Radiohead — a rebranded fork of Limusic
 Copyright (C) 2025-2026 the Limusic contributors
-Copyright (C) 2026 the Wrath contributors
+Copyright (C) 2026 the Radiohead contributors
 
 This program is free software: you can redistribute it and/or modify it under the
 terms of the GNU General Public License as published by the Free Software
 Foundation, either version 3 of the License, or (at your option) any later version.
 ```
 
-If you distribute a modified Wrath, GPL-3.0 requires that you keep these notices,
+If you distribute a modified Radiohead, GPL-3.0 requires that you keep these notices,
 keep the license, mark your changes, and make the complete corresponding source
 available under the same license.
 
@@ -119,11 +119,11 @@ available under the same license.
 - Upstream docs: [CONTRIBUTING.md](CONTRIBUTING.md), [docs/](docs/)
 
 Bug reports about the shared code base are usually better upstream; report
-Wrath-only changes (branding, disabled updater, this fork's packaging) here.
+Radiohead-only changes (branding, disabled updater, this fork's packaging) here.
 
 ## Disclaimer
 
-Wrath is not affiliated with, funded, authorized, endorsed by, or in any way
+Radiohead is not affiliated with, funded, authorized, endorsed by, or in any way
 associated with YouTube, Google LLC, or their affiliates and subsidiaries. All
 trademarks, service marks, and intellectual property rights referenced in this
 project belong to their respective owners.

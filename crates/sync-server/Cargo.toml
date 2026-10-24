@@ -3,10 +3,10 @@ name = "sync-server"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
-description = "Wrath Listen Together sync server (self-hosted WebSocket hub)"
+description = "Radiohead Listen Together sync server (self-hosted WebSocket hub)"
 
 [[bin]]
-name = "wrath-sync"
+name = "radiohead-sync"
 path = "src/main.rs"
 
 [dependencies]

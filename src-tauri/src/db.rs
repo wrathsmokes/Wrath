@@ -26,7 +26,7 @@ pub struct Db(Mutex<Connection>);
 pub fn account_key(session_cookie: &str) -> Option<String> {
     let sapisid = innertube::cookie_sapisid(session_cookie)?;
     let mut digest = Md5::new();
-    digest.update(b"wrath-google-account-v1");
+    digest.update(b"radiohead-google-account-v1");
     digest.update(sapisid.as_bytes());
     Some(format!("ga-{:x}", digest.finalize()))
 }
@@ -1580,7 +1580,7 @@ mod tests {
 
     #[test]
     fn on_repeat_leaves_local_files_out_and_the_file_is_wal() {
-        let path = std::env::temp_dir().join("wrath-plays-purge-test.sqlite");
+        let path = std::env::temp_dir().join("radiohead-plays-purge-test.sqlite");
         std::fs::remove_file(&path).ok();
         let d = Db::open(&path).unwrap();
         // Piggybacking on a file-backed test: `journal_mode` answers with a row, so setting it via
@@ -1601,7 +1601,7 @@ mod tests {
     /// cache is purged once, and from then on clearing it spares hand-picked lyrics.
     #[test]
     fn opening_the_db_migrates_the_boidu_switch_and_pins_survive_clears() {
-        let path = std::env::temp_dir().join("wrath-lyrics-providers-test.sqlite");
+        let path = std::env::temp_dir().join("radiohead-lyrics-providers-test.sqlite");
         std::fs::remove_file(&path).ok();
         {
             let d = Db::open(&path).unwrap();
@@ -1759,7 +1759,7 @@ mod tests {
     #[test]
     fn opening_the_db_moves_plays_into_listens() {
         let dir = qtest_dir("plays-to-listens");
-        let path = dir.join("wrath.sqlite");
+        let path = dir.join("radiohead.sqlite");
         {
             let conn = rusqlite::Connection::open(&path).unwrap();
             conn.execute_batch(SCHEMA_V0_8_1).unwrap();
@@ -1906,7 +1906,7 @@ mod tests {
     /// already there is merged away rather than left to show up twice in the menu.
     #[test]
     fn opening_the_db_rekeys_and_dedupes_accounts() {
-        let path = std::env::temp_dir().join("wrath-accounts-rekey-test.sqlite");
+        let path = std::env::temp_dir().join("radiohead-accounts-rekey-test.sqlite");
         std::fs::remove_file(&path).ok();
         let canonical = account_key("SAPISID=aaa").unwrap();
         {
@@ -1952,7 +1952,7 @@ mod tests {
     /// Databases written before multi-account migrate their single session into `accounts` once.
     #[test]
     fn opening_the_db_migrates_the_legacy_session() {
-        let path = std::env::temp_dir().join("wrath-accounts-migration-test.sqlite");
+        let path = std::env::temp_dir().join("radiohead-accounts-migration-test.sqlite");
         std::fs::remove_file(&path).ok();
         {
             let d = Db::open(&path).unwrap();
@@ -1978,7 +1978,7 @@ mod tests {
 
     /// A fresh directory per test: these run in parallel and each one moves files around.
     fn qtest_dir(name: &str) -> std::path::PathBuf {
-        let dir = std::env::temp_dir().join(format!("wrath-qtest-{}-{name}", std::process::id()));
+        let dir = std::env::temp_dir().join(format!("radiohead-qtest-{}-{name}", std::process::id()));
         let _ = std::fs::remove_dir_all(&dir);
         std::fs::create_dir_all(&dir).unwrap();
         dir
@@ -1987,7 +1987,7 @@ mod tests {
     #[test]
     fn open_or_quarantine_moves_a_corrupt_file_aside() {
         let dir = qtest_dir("corrupt");
-        let path = dir.join("wrath.sqlite");
+        let path = dir.join("radiohead.sqlite");
         std::fs::write(&path, b"this is not a sqlite file").unwrap();
         {
             let (d, aside) = Db::open_or_quarantine(&path).unwrap();
@@ -2006,7 +2006,7 @@ mod tests {
     #[test]
     fn open_or_quarantine_leaves_a_healthy_file_alone() {
         let dir = qtest_dir("healthy");
-        let path = dir.join("wrath.sqlite");
+        let path = dir.join("radiohead.sqlite");
         Db::open(&path).unwrap().set_setting("k", "v");
         let (d, aside) = Db::open_or_quarantine(&path).unwrap();
         assert_eq!(aside, None);
@@ -2026,7 +2026,7 @@ mod tests {
     #[test]
     fn open_or_quarantine_leaves_an_unopenable_path_alone() {
         let dir = qtest_dir("unopenable");
-        let path = dir.join("wrath.sqlite");
+        let path = dir.join("radiohead.sqlite");
         std::fs::create_dir(&path).unwrap();
         assert!(Db::open_or_quarantine(&path).is_err());
         assert!(path.is_dir(), "nothing was moved aside");
@@ -2039,15 +2039,15 @@ mod tests {
     #[test]
     fn open_or_quarantine_drops_the_stale_wal_sidecars() {
         let dir = qtest_dir("sidecars");
-        let path = dir.join("wrath.sqlite");
+        let path = dir.join("radiohead.sqlite");
         std::fs::write(&path, b"this is not a sqlite file").unwrap();
-        std::fs::write(dir.join("wrath.sqlite-wal"), b"stale wal").unwrap();
-        std::fs::write(dir.join("wrath.sqlite-shm"), b"stale shm").unwrap();
+        std::fs::write(dir.join("radiohead.sqlite-wal"), b"stale wal").unwrap();
+        std::fs::write(dir.join("radiohead.sqlite-shm"), b"stale shm").unwrap();
         let (d, aside) = Db::open_or_quarantine(&path).unwrap();
         assert!(aside.is_some_and(|a| a.exists()), "the corrupt file is moved aside");
         for suffix in ["-wal", "-shm"] {
             let now =
-                std::fs::read(dir.join(format!("wrath.sqlite{suffix}"))).unwrap_or_default();
+                std::fs::read(dir.join(format!("radiohead.sqlite{suffix}"))).unwrap_or_default();
             assert!(!now.starts_with(b"stale"), "the fresh db inherited the old {suffix}");
         }
         drop(d);
@@ -2234,7 +2234,7 @@ mod tests {
     /// are there, because every release keeps them as projections of the active account.
     fn assert_upgrades_cleanly(tag: &str, schema: &str, migrated_account: bool) {
         let dir = qtest_dir(&format!("upgrade-{tag}"));
-        let path = dir.join("wrath.sqlite");
+        let path = dir.join("radiohead.sqlite");
         let now = now_secs();
         let later = now + 6 * 3600;
         let id = account_key(LEGACY_COOKIE).unwrap();

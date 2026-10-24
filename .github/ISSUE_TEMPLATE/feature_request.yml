@@ -1,11 +1,11 @@
 name: Idea or request
-description: Something you wish Wrath did.
+description: Something you wish Radiohead did.
 labels: [enhancement]
 body:
   - type: textarea
     id: idea
     attributes:
-      label: What would you like Wrath to do?
+      label: What would you like Radiohead to do?
       description: >
         Rough is fine. If it is easier to say what annoys you today than to
         describe the fix, say that instead.

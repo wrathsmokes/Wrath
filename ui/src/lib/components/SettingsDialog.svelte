@@ -167,7 +167,7 @@
 		diagError = '';
 		try {
 			const path = await save({
-				defaultPath: `wrath-diagnostics-${new Date().toISOString().slice(0, 10)}.txt`,
+				defaultPath: `radiohead-diagnostics-${new Date().toISOString().slice(0, 10)}.txt`,
 				filters: [{ name: 'Text', extensions: ['txt'] }]
 			});
 			if (!path) return;
@@ -725,7 +725,7 @@
 							class="mb-7 rounded-xl border bg-gradient-to-br from-primary/8 to-transparent px-4 py-4"
 						>
 							<div class="flex items-center gap-2">
-								<span class="font-heading text-lg font-bold">Wrath</span>
+								<span class="font-heading text-lg font-bold">Radiohead</span>
 								{#if version}
 									<span
 										class="rounded-full bg-primary/12 px-2 py-0.5 text-[11px] font-semibold text-primary"
@@ -955,7 +955,7 @@
 
 {#snippet clientList()}
 	<p class="mb-3 max-w-prose text-xs leading-relaxed text-muted-foreground">
-		{t('settings.general.stream_clients_hint', { var: 'WRATH_DISABLED_CLIENTS' })}
+		{t('settings.general.stream_clients_hint', { var: 'RADIOHEAD_DISABLED_CLIENTS' })}
 	</p>
 	<div class="flex flex-col gap-2">
 		{#each clients as name (name)}

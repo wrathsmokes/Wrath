@@ -1,8 +1,8 @@
 //! The text a user hands over when something breaks: what this machine is, plus the tail of
-//! `wrath.log` with the secrets taken out.
+//! `radiohead.log` with the secrets taken out.
 //!
 //! A report used to cost a round of questions (version, distro, how they installed it) and then
-//! walking someone to `~/.local/share/wrath/wrath.log` by hand. This is that conversation,
+//! walking someone to `~/.local/share/radiohead/radiohead.log` by hand. This is that conversation,
 //! precomputed, behind one button in Settings ▸ About.
 //!
 //! Redaction is the part that is not allowed to be lazy. The blob is written to be pasted into a
@@ -32,9 +32,9 @@ const FRESH_LOG_BYTES: u64 = 4096;
 /// reported as `set` instead of printed.
 const ENV_KEYS: &[&str] = &[
     "RUST_LOG",
-    "WRATH_MPV_LOG",
-    "WRATH_PROXY",
-    "WRATH_DISABLED_CLIENTS",
+    "RADIOHEAD_MPV_LOG",
+    "RADIOHEAD_PROXY",
+    "RADIOHEAD_DISABLED_CLIENTS",
     "WEBKIT_DISABLE_DMABUF_RENDERER",
     "WEBKIT_DMABUF_RENDERER_FORCE_SHM",
     "__NV_DISABLE_EXPLICIT_SYNC",
@@ -50,13 +50,13 @@ const ENV_KEYS: &[&str] = &[
 /// AppImage run from /opt or a mounted volume. What the path is actually consulted for (is this an
 /// AppImage install) is already on the first line of the header via `install_kind`.
 const SECRET_ENV_KEYS: &[&str] =
-    &["WRATH_PROXY", "WRATH_COOKIE", "WRATH_VISITOR_DATA", "APPIMAGE"];
+    &["RADIOHEAD_PROXY", "RADIOHEAD_COOKIE", "RADIOHEAD_VISITOR_DATA", "APPIMAGE"];
 
 /// Environment header + redacted log tail, capped at [`MAX_CHARS`].
 pub fn report(app: &AppHandle, db: &Db) -> String {
     let mut out = String::new();
     out.push_str(
-        "# Wrath diagnostics. Paste this into your bug report.\n\
+        "# Radiohead diagnostics. Paste this into your bug report.\n\
          # Cookies, tokens, signed URLs, file paths and IP addresses have been removed.\n\n",
     );
     out.push_str(&redact(&header(app, db)));
@@ -88,7 +88,7 @@ fn header(app: &AppHandle, db: &Db) -> String {
     let mut out = String::new();
     let _ = writeln!(
         out,
-        "Wrath {} ({} {}, {})",
+        "Radiohead {} ({} {}, {})",
         env!("CARGO_PKG_VERSION"),
         std::env::consts::OS,
         std::env::consts::ARCH,
@@ -193,14 +193,14 @@ fn install_kind(app: &AppHandle) -> &'static str {
 
 /// The log to include: this run, preceded by the previous one when this run has barely started.
 fn log_text(dir: &Path, budget: usize) -> String {
-    let current = dir.join("wrath.log");
-    let previous = dir.join("wrath.log.1");
+    let current = dir.join("radiohead.log");
+    let previous = dir.join("radiohead.log.1");
     let mut text = String::new();
     if std::fs::metadata(&current).map(|m| m.len()).unwrap_or(0) < FRESH_LOG_BYTES {
         if let Some(t) = tail(&previous, budget / 2) {
-            text.push_str("=== previous run (wrath.log.1) ===\n");
+            text.push_str("=== previous run (radiohead.log.1) ===\n");
             text.push_str(&t);
-            text.push_str("\n=== this run (wrath.log) ===\n");
+            text.push_str("\n=== this run (radiohead.log) ===\n");
         }
     }
     let left = budget.saturating_sub(text.len());
@@ -288,7 +288,7 @@ mod tests {
             "visitorData=CgtabcdefghijklmnopqrstuvwxyzABCDEFGHIJ0123456789\n",
             "video_id=dQw4w9WgXcQ proxy at 127.0.0.1:8080\n",
             "INFO app_lib::potoken: session token still valid, skipping the bootstrap\n",
-            // mpv's own log reaches this file now (WRATH_MPV_LOG), and at `v` it prints the
+            // mpv's own log reaches this file now (RADIOHEAD_MPV_LOG), and at `v` it prints the
             // whole signed URL it was handed.
             "INFO mpv: [cplayer] Playing: https://rr5---sn-abc.googlevideo.com/videoplayback?expire=1789575360&sig=AE0s2JYwRgIhAIzeTLdUmzZHPIYZUZW7LL1NlnqZ50b1nk\n",
         );
@@ -323,26 +323,26 @@ mod tests {
         let saved = std::env::var("HOME").ok();
         std::env::set_var("HOME", "/home/diag-user-7q");
         let out =
-            redact("Env: RUST_LOG=info, APPIMAGE=/home/diag-user-7q/Downloads/wrath.AppImage\n");
+            redact("Env: RUST_LOG=info, APPIMAGE=/home/diag-user-7q/Downloads/radiohead.AppImage\n");
         match saved {
             Some(home) => std::env::set_var("HOME", home),
             None => std::env::remove_var("HOME"),
         }
         assert!(!out.contains("diag-user-7q"), "username survived redaction:\n{out}");
-        assert!(out.contains("Env: RUST_LOG=info, APPIMAGE=~/Downloads/wrath.AppImage"), "{out}");
+        assert!(out.contains("Env: RUST_LOG=info, APPIMAGE=~/Downloads/radiohead.AppImage"), "{out}");
     }
 
     #[test]
     fn redaction_leaves_the_header_readable() {
         let header = concat!(
-            "Wrath 0.7.3 (linux x86_64, AppImage)\n",
+            "Radiohead 0.7.3 (linux x86_64, AppImage)\n",
             "System: Fedora Linux 44 (KDE Plasma), kernel 7.1.8-200.fc44.x86_64, wayland session on KDE\n",
             "WebKitGTK: 2.50.6, NVIDIA: yes\n",
             "Signed in: yes | Proxy: no | Quality: HIGH | Normalize: yes | Crossfade: 5s | Music videos: yes | Disabled clients: none\n",
         );
         let out = redact(header);
         for kept in [
-            "Wrath 0.7.3",
+            "Radiohead 0.7.3",
             "Fedora Linux 44",
             "7.1.8-200.fc44.x86_64",
             "WebKitGTK: 2.50.6",
@@ -362,7 +362,7 @@ mod tests {
 
     #[test]
     fn tail_keeps_the_end_and_never_splits_a_line() {
-        let dir = std::env::temp_dir().join("wrath-diag-test");
+        let dir = std::env::temp_dir().join("radiohead-diag-test");
         std::fs::create_dir_all(&dir).unwrap();
         let path = dir.join("t.log");
         std::fs::write(&path, "first line\nsecond line\nthird line\n").unwrap();

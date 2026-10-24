@@ -1,4 +1,4 @@
-//! Shared wire types for Wrath "Listen Together". JSON over WebSocket, used by both the sync
+//! Shared wire types for Radiohead "Listen Together". JSON over WebSocket, used by both the sync
 //! server (`crates/sync-server`) and the Tauri client (`src-tauri/src/listentogether`).
 //!
 //! The design is copied from Metrolist's `metroserver` (see `context/19-listen-together.md`):

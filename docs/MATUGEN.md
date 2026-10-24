@@ -1,34 +1,34 @@
 # Matugen integration
 
-Matugen support is **opt-in**. Wrath never reads or watches a Matugen file unless the
+Matugen support is **opt-in**. Radiohead never reads or watches a Matugen file unless the
 **Matugen** switch under Settings ▸ Appearance is on.
 
 ## What it does
 
-While enabled, Wrath injects the generated CSS from your Matugen output file as a
+While enabled, Radiohead injects the generated CSS from your Matugen output file as a
 stylesheet and adds the `matugen-theme` class to `<html>`. The generated palette then owns
 the application's color tokens, accent included: the accent picker and "Adapt colors to
 artwork" are switched off while it's on. When Matugen regenerates `matugen.css` after a
-wallpaper change, Wrath reloads it live.
+wallpaper change, Radiohead reloads it live.
 
 ## Expected CSS path
 
-Wrath reads `wrath/matugen.css` from the system config directory:
+Radiohead reads `radiohead/matugen.css` from the system config directory:
 
-- Linux: `~/.config/wrath/matugen.css`
-- Windows: `%APPDATA%\wrath\matugen.css`
-- macOS: `~/Library/Application Support/wrath/matugen.css`
+- Linux: `~/.config/radiohead/matugen.css`
+- Windows: `%APPDATA%\radiohead\matugen.css`
+- macOS: `~/Library/Application Support/radiohead/matugen.css`
 
 ## Configure Matugen
 
 1. Copy [`matugen-template.css`](matugen-template.css) into your Matugen templates directory
-   as `wrath.css`.
+   as `radiohead.css`.
 2. Add a template entry to your Matugen config, for example:
 
 ```toml
-[templates.wrath]
-input_path = "~/.config/matugen/templates/wrath.css"
-output_path = "~/.config/wrath/matugen.css"
+[templates.radiohead]
+input_path = "~/.config/matugen/templates/radiohead.css"
+output_path = "~/.config/radiohead/matugen.css"
 ```
 
 Adjust `input_path` to match your setup; `output_path` must be the path above for your system.
@@ -41,15 +41,15 @@ matugen image /path/to/wallpaper.png
 
 Or otherwise regenerate after changing wallpaper.
 
-## Enable in Wrath
+## Enable in Radiohead
 
-Open Settings ▸ Appearance and turn **Matugen** on. Wrath starts its file watcher and loads
+Open Settings ▸ Appearance and turn **Matugen** on. Radiohead starts its file watcher and loads
 the generated palette. With the switch off (the default), no watcher starts and the
-`wrath/matugen.css` file is not read or created.
+`radiohead/matugen.css` file is not read or created.
 
 ## Disable
 
-Turn **Matugen** off. Wrath stops the watcher, removes the injected stylesheet and restores
+Turn **Matugen** off. Radiohead stops the watcher, removes the injected stylesheet and restores
 the normal theme, including your own accent. Your template and generated CSS file are not
 deleted.
 

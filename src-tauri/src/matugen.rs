@@ -8,7 +8,7 @@ use std::{
 };
 use tauri::{path::BaseDirectory, AppHandle, Emitter, Manager};
 
-const THEME_PATH: &str = "wrath/matugen.css";
+const THEME_PATH: &str = "radiohead/matugen.css";
 
 fn path(app: &AppHandle) -> Result<PathBuf, String> {
     app.path().resolve(THEME_PATH, BaseDirectory::Config).map_err(|e| e.to_string())

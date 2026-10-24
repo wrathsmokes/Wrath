@@ -349,7 +349,7 @@ impl InnerTube {
         let s = self.session.read().unwrap();
         let sapisid = s.sapisid()?;
         let dsid = s.data_sync_id.as_deref().unwrap_or_default();
-        Some(sha1_hex(&format!("wrath-comments-identity-v1\0{sapisid}\0{dsid}")))
+        Some(sha1_hex(&format!("radiohead-comments-identity-v1\0{sapisid}\0{dsid}")))
     }
 
     pub fn set_visitor_data(&self, vd: Option<String>) {

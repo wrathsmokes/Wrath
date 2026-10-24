@@ -7,7 +7,7 @@ This repository is a modified fork of **Limusic**:
 - Upstream: <https://github.com/SimoHypers/limusic>
 - Upstream license: GNU General Public License v3.0
 - Fork point: `v1.3.0`, commit `9fb803b` (`chore: bump to 1.3.0`)
-- Fork name: **Wrath**
+- Fork name: **Radiohead**
 
 Limusic is itself a desktop rebuild of the playback engine behind
 [Metrolist](https://github.com/mostafaalagamy/Metrolist). Limusic's README, source
@@ -18,7 +18,7 @@ retained in this repository's history.
 
 The upstream code is Copyright (C) the Limusic contributors, licensed under
 GPL-3.0. Those notices are retained. Modifications made for this fork are
-Copyright (C) 2026 the Wrath contributors, also licensed under GPL-3.0.
+Copyright (C) 2026 the Radiohead contributors, also licensed under GPL-3.0.
 
 Nothing in this fork relicenses upstream code. Every file originating upstream
 remains under GPL-3.0.
