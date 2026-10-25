@@ -126,7 +126,11 @@ pub fn open_login(app: AppHandle, state: Arc<AppState>, add_account: bool) {
                 {
                     let _ = tx.send(());
                 }
-            });
+            })
+            // Windows needs the icon set per window: without it, a webview window may fall back
+            // to a stale/cached icon instead of the one embedded in the exe resources.
+            .icon(tauri::include_image!("icons/icon.png"))
+            .expect("bundled window icon is valid");
         let builder = match LOGIN_UA {
             Some(ua) => builder.user_agent(ua),
             None => builder,
@@ -199,7 +203,9 @@ pub async fn refresh_session(app: AppHandle, state: Arc<AppState>) {
             .inner_size(1024.0, 768.0)
             .skip_taskbar(true)
             .decorations(false)
-            .focused(false);
+            .focused(false)
+            .icon(tauri::include_image!("icons/icon.png"))
+            .expect("bundled window icon is valid");
         let builder = match LOGIN_UA {
             Some(ua) => builder.user_agent(ua),
             None => builder,

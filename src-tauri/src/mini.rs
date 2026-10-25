@@ -60,7 +60,9 @@ pub fn open(app: &AppHandle) -> Result<(), String> {
             // A square WM shadow around a rounded transparent window looks broken.
             .shadow(false)
             // Positioned before it is shown, so it never flashes wherever the WM guessed first.
-            .visible(false);
+            .visible(false)
+            .icon(tauri::include_image!("icons/icon.png"))
+            .expect("bundled window icon is valid");
         let win = crate::http::proxied(win)
             .build()
             .map_err(|e| format!("couldn't open the mini player: {e}"))?;
